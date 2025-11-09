@@ -4,45 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ứng dụng Kiểm tra Trực tuyến</title>
-    <!-- Tải Tailwind CSS -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Tải Font Lexend -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Tải Thư viện MathJax để hiển thị công thức Toán -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    
+    <!-- BẮT ĐẦU: Thêm cấu hình MathJax -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']], // Nhận diện $...$ và \(...\)
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]  // Nhận diện $$...$$ và \[...\]
+        },
+        svg: {
+          fontCache: 'global'
+        }
+      };
+    </script>
+    <!-- KẾT THÚC: Thêm cấu hình MathJax -->
+    
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <style>
-        /* Cấu hình Chủ đề 5: Kem Cổ Điển (Classic Cream) */
         :root {
             --font-main: 'Lexend', sans-serif;
-            
-            /* Màu sắc Chủ đề 5: Kem Cổ Điển */
-            --color-bg-main: #FDFBF6; /* Nền Kem */
+            --color-bg-main: #FDFBF6; 
             --color-bg-card: #FFFFFF;
-            --color-text-primary: #5D4037; /* Nâu đậm */
+            --color-text-primary: #5D4037; 
             --color-text-secondary: #795548;
-            --color-accent: #FF7043; /* Cam đất ấm */
+            --color-accent: #FF7043; 
             --color-accent-hover: #F4511E;
             --color-accent-disabled: #FFAB91;
-            
             --color-option-border: #D7CCC8;
-            --color-option-hover: #FFF3E0; /* Nền kem nhạt khi hover */
-            --color-option-selected: #FFF9C4; /* Nền kem nhạt khi chọn */
-            --color-option-selected-border: #FFA000; /* Viền vàng đậm khi chọn */
-            
-            /* Màu sắc cho Đúng/Sai (Giữ nguyên để rõ ràng) */
-            --color-correct: #E8F5E9;
-            --color-correct-border: #4CAF50;
-            --color-incorrect: #FFEBEE;
-            --color-incorrect-border: #F44336;
-            
-            /* Màu sắc cho Đúng/Sai Phần 2 */
-            --color-tf-selected: #FFE0B2; /* Cam nhạt khi chọn Đúng/Sai */
+            --color-option-hover: #FFF3E0; 
+            --color-option-selected: #FFF9C4; 
+            --color-option-selected-border: #FFA000; 
+            --color-tf-selected: #FFE0B2; 
             --color-tf-selected-border: #FF7043;
         }
 
@@ -52,25 +53,23 @@
             color: var(--color-text-primary);
         }
 
-        /* Vùng hiển thị an toàn 85% */
         .safe-area {
             width: 100%;
-            max-width: 800px; /* Giới hạn chiều rộng tối đa */
+            max-width: 800px; 
             margin-left: auto;
             margin-right: auto;
-            padding: 5vw; /* 10% lề 2 bên = 80%? -> padding 2.5rem ~ 85% */
+            padding: 5vw;
         }
         
         @media (min-width: 800px) {
             .safe-area {
-                padding: 2.5rem; /* Lề cố định trên máy tính */
+                padding: 2.5rem; 
             }
         }
         
-        /* Ghi đè màu sắc của Tailwind bằng CSS Variables */
         .card {
             background-color: var(--color-bg-card);
-            border-radius: 0.75rem; /* 12px */
+            border-radius: 0.75rem; 
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -79,7 +78,7 @@
             background-color: var(--color-accent);
             color: white;
             transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            border-radius: 0.5rem; /* 8px */
+            border-radius: 0.5rem; 
             font-weight: 600;
             padding: 0.75rem 1.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
@@ -95,18 +94,17 @@
         }
 
         .btn-secondary {
-            background-color: var(--color-text-primary); /* Nút Sao chép */
+            background-color: var(--color-text-primary); 
             color: var(--color-bg-main);
             transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
             border-radius: 0.5rem;
             font-weight: 500;
-            padding: 0.625rem 1.25rem; /* 10px 20px */
+            padding: 0.625rem 1.25rem; 
         }
         .btn-secondary:hover {
             opacity: 0.85;
         }
 
-        /* Tùy chỉnh Select Dropdown */
         .select-custom {
             background-color: #FFF;
             border: 1px solid var(--color-option-border);
@@ -118,8 +116,11 @@
             border-color: var(--color-accent);
             box-shadow: 0 0 0 2px var(--color-accent-disabled);
         }
+        .select-custom:disabled {
+            background-color: #f3f4f6;
+            opacity: 0.7;
+        }
 
-        /* Tùy chỉnh các nút lựa chọn */
         .option-btn {
             border: 2px solid var(--color-option-border);
             background-color: white;
@@ -142,7 +143,6 @@
             box-shadow: 0 4px 8px -2px rgba(0,0,0,0.05);
         }
 
-        /* Tùy chỉnh nút Đúng/Sai */
         .tf-btn {
             border: 2px solid var(--color-option-border);
             background-color: white;
@@ -160,7 +160,6 @@
             font-weight: 600;
         }
 
-        /* Hiệu ứng Fade */
         .fade-out {
             opacity: 0;
             transform: scale(0.95);
@@ -172,12 +171,10 @@
             transition: opacity 0.3s ease-in 0.15s, transform 0.3s ease-in 0.15s;
         }
         
-        /* Đảm bảo nội dung câu hỏi hiển thị xuống dòng */
         .question-content p {
-            margin-bottom: 0.5rem; /* 8px */
+            margin-bottom: 0.5rem; 
         }
         
-        /* Modal Cảnh báo Chuyển Tab */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -215,10 +212,8 @@
 
 <body class="min-h-screen w-full flex items-center justify-center p-4">
 
-    <!-- Vùng an toàn 85% -->
     <div class="safe-area">
 
-        <!-- MÀN HÌNH 1: ĐĂNG NHẬP -->
         <div id="login-screen" class="card w-full p-6 md:p-10 space-y-6">
             <div class="text-center space-y-2">
                 <h1 class="text-xl md:text-2xl font-bold text-var-text-primary leading-tight">
@@ -235,36 +230,32 @@
             <hr style="border-color: var(--color-option-border);">
 
             <div class="space-y-4">
-                <p class="text-center text-var-text-primary">
-                    Vui lòng chọn đúng thông tin của em để bắt đầu.
+                <p id="loading-msg" class="text-center text-var-text-secondary font-medium">
+                    Đang tải dữ liệu, vui lòng chờ...
                 </p>
-                
-                <!-- Chọn Lớp -->
+                <p id="loading-error" class="text-center text-red-600 font-semibold hidden"></p>
+
                 <div>
-                    <label for="class-select" class="block text-sm font-semibold text-var-text-primary mb-2">1. Chọn lớp</label>
+                    <label id="class-select-label" for="class-select" class="block text-sm font-semibold text-var-text-primary mb-2">1. Chọn lớp</label>
                     <select id="class-select" class="select-custom w-full p-3">
                         <option value="">-- Vui lòng chọn lớp --</option>
                     </select>
                 </div>
                 
-                <!-- Chọn Tên -->
                 <div>
-                    <label for="name-select" class="block text-sm font-semibold text-var-text-primary mb-2">2. Chọn tên của em</label>
+                    <label id="name-select-label" for="name-select" class="block text-sm font-semibold text-var-text-primary mb-2">2. Chọn tên của em</label>
                     <select id="name-select" class="select-custom w-full p-3" disabled>
                         <option value="">-- Vui lòng chọn tên --</option>
                     </select>
                 </div>
                 
-                <!-- Nút Bắt đầu -->
                 <button id="start-btn" class="btn-primary w-full" disabled>
                     Bắt đầu làm bài
                 </button>
             </div>
         </div>
 
-        <!-- MÀN HÌNH 2: LÀM BÀI -->
         <div id="quiz-screen" class="card w-full p-6 md:p-8 space-y-6 hidden">
-            <!-- Header: Câu hỏi & Đồng hồ -->
             <div class="flex justify-between items-center">
                 <span id="question-counter" class="text-sm font-semibold px-3 py-1 bg-var-option-selected text-var-text-primary rounded-full">
                     Câu 1/28
@@ -274,37 +265,28 @@
                 </span>
             </div>
             
-            <!-- Hướng dẫn (nếu có) -->
             <div id="part-guide" class="p-4 bg-var-option-hover rounded-lg text-var-text-secondary text-sm" style="border-left: 4px solid var(--color-accent-disabled);">
-                <!-- Nội dung hướng dẫn sẽ được chèn vào đây -->
             </div>
 
-            <!-- Nội dung câu hỏi -->
             <div class="space-y-4">
                 <div id="question-text" class="text-lg font-medium leading-relaxed question-content">
-                    <!-- Nội dung câu hỏi sẽ được chèn vào đây -->
                 </div>
                 
-                <!-- Khu vực đáp án -->
                 <div id="options-container" class="space-y-3">
-                    <!-- Các phương án sẽ được chèn vào đây -->
                 </div>
             </div>
 
-            <!-- Nút Tiếp theo / Nộp bài -->
             <button id="next-btn" class="btn-primary w-full mt-4" disabled>
                 Tiếp theo
             </button>
         </div>
 
-        <!-- MÀN HÌNH 3: KẾT QUẢ -->
         <div id="result-screen" class="card w-full p-6 md:p-10 space-y-6 text-center hidden">
             <h2 class="text-3xl font-bold" style="color: #27AE60;">Hoàn thành!</h2>
             <p id="result-user-name" class="text-lg text-var-text-secondary">
                 Đây là kết quả bài làm của bạn.
             </p>
 
-            <!-- Thẻ điểm số -->
             <div class="p-6 rounded-lg space-y-2" style="background-color: var(--color-bg-main);">
                 <p class="text-sm font-medium text-var-text-secondary">Điểm số của bạn</p>
                 <p id="final-score" class="text-5xl font-bold text-var-accent">
@@ -315,29 +297,24 @@
                 </p>
             </div>
 
-            <!-- Hướng dẫn Sao chép -->
             <p class="text-sm text-var-text-secondary pt-2">Nhấn nút để sao chép kết quả</p>
 
-            <!-- Nút Sao chép -->
             <button id="copy-btn" class="btn-secondary mt-2">
                 Sao chép kết quả
             </button>
             <p id="copy-success-msg" class="text-sm text-green-600 h-4"></p>
             
-            <!-- Fallback cho copy -->
             <div id="copy-fallback-wrapper" class="w-full space-y-2 hidden">
                 <p class="text-sm text-var-text-secondary">Để sao chép, vui lòng nhấn Ctrl+C hoặc sao chép thủ công:</p>
                 <input id="copy-fallback-input" type="text" readonly class="select-custom w-full p-2 text-center">
             </div>
 
-            <!-- Nút Kết thúc -->
             <button id="finish-btn" class="btn-primary w-full max-w-xs mx-auto mt-4">
                 Kết thúc
             </button>
         </div>
     </div>
 
-    <!-- MỚI: MODAL CẢNH BÁO CHUYỂN TAB -->
     <div id="warning-modal" class="modal-overlay">
         <div class="modal-content space-y-4">
             <svg class="w-16 h-16 text-yellow-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -351,22 +328,20 @@
             </button>
         </div>
     </div>
-    <!-- KẾT THÚC MODAL -->
 
 
     <script>
         // --- CẤU HÌNH VÀ DỮ LIỆU ---
 
-        // URL Google Sheet (Thầy cô đã cung cấp)
-        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycby1UTiD8WfAt6S1HnV_mL_-LVhvHZr7gmqGVvNWvbXLq5isbLkZCNxDdfe3IKvYckJt/exec';
+        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwte0zcBOYgvabqNOof85HeiethqCvyjN_rL9xj2b9_-FugQvFTbHkeo_80y7cBRZBhFw/exec';
 
-        const QUIZ_TIME_SECONDS = 45 * 60; // 45 phút
+        const QUIZ_TIME_SECONDS = 45 * 60; 
         const TOTAL_QUESTIONS = 28;
         const MCQ_PART_COUNT = 24;
         const TF_PART_COUNT = 4;
-        const MAX_VIOLATIONS = 5; // Số lần cảnh báo tối đa
+        const MAX_VIOLATIONS = 5; 
 
-        // Dữ liệu học sinh (Trích xuất từ Danhsach.pdf)
+        // Dữ liệu học sinh (Vẫn giữ lại vì danh sách lớp cố định)
         const studentData = {
             "10A1": [
                 "Đỗ Đức An", "Lê Phương Anh", "Phạm Phương Anh", "Trần Đại Quang Anh", "Trần Việt Anh", 
@@ -406,285 +381,34 @@
             ]
         };
 
-        // Dữ liệu Đề thi (Trích xuất từ De.txt)
-        const quizData = {
-            "part1_mcq": [
-                {
-                    "question": "Phương án nào sau đây điền từ đúng vào chỗ trống: <br>\"... là quá trình biến đổi dữ liệu thô thành thông tin có ích.\"",
-                    "options": ["Xử lý dữ liệu", "Chuyển đổi dữ liệu", "Lưu trữ thông tin", "Chia sẻ thông tin"],
-                    "answer": "Xử lý dữ liệu"
-                },
-                {
-                    "question": "Phương án nào sau đây <b>không phải</b> là một đơn vị lưu trữ dữ liệu?",
-                    "options": ["Megabyte (MB)", "Terabyte (TB)", "Petabyte (PB)", "Watt (W)"],
-                    "answer": "Watt (W)"
-                },
-                {
-                    "question": "Phương án nào sau đây là đúng khi nói về sự khác nhau giữa dữ liệu và thông tin?",
-                    "options": [
-                        "Dữ liệu là thông tin chưa được xử lý, còn thông tin là kết quả của việc xử lý dữ liệu.",
-                        "Dữ liệu là một phần của thông tin, và thông tin chỉ có thể tồn tại khi dữ liệu đầy đủ.",
-                        "Dữ liệu và thông tin là hai khái niệm hoàn toàn giống nhau và có thể thay thế cho nhau.",
-                        "Dữ liệu có thể thay thế thông tin mà không cần xử lý."
-                    ],
-                    "answer": "Dữ liệu là thông tin chưa được xử lý, còn thông tin là kết quả của việc xử lý dữ liệu."
-                },
-                {
-                    "question": "Phương án nào sau đây <b>không phải</b> là lợi ích của việc lưu trữ thông tin trên thiết bị số?",
-                    "options": [
-                        "Lưu trữ thông tin trên thiết bị số giúp tiết kiệm không gian vật lý.",
-                        "Lưu trữ thông tin trên thiết bị số giúp việc lưu trữ dữ liệu trở nên đơn giản hơn.",
-                        "Lưu trữ thông tin trên thiết bị số giúp người sử dụng có thể tìm kiếm và truy xuất thông tin nhanh chóng.",
-                        "Lưu trữ thông tin trên thiết bị số không thể lưu trữ được nhiều do dung lượng lưu trữ của các thiết bị số là hữu hạn."
-                    ],
-                    "answer": "Lưu trữ thông tin trên thiết bị số không thể lưu trữ được nhiều do dung lượng lưu trữ của các thiết bị số là hữu hạn."
-                },
-                {
-                    "question": "Hàng tháng, công ty A phải tổng kết hoạt động kinh doanh của một tháng, thống kê số lượng sản phẩm đã bán ra, số lượng tồn kho và doanh thu sau bán hàng, từ đó đưa ra được chiến lược quảng cáo cho các tháng tiếp theo. Phương án nào dưới đây xác định đúng dữ liệu và thông tin trong tình huống trên?",
-                    "options": [
-                        "Dữ liệu là những con số thể hiện số lượng sản phẩm bán ra, số lượng tồn kho và doanh thu sau bán hàng; Thông tin là chiến lược quảng cáo cho các tháng tiếp theo.",
-                        "Dữ liệu là chiến lược quảng cáo cho các tháng tiếp theo; Thông tin là những con số thể hiện số lượng sản phẩm bán ra, số lượng tồn kho và doanh thu sau bán hàng.",
-                        "Dữ liệu những con số thể hiện là số lượng sản phẩm bán ra và doanh thu sau bán hàng; Thông tin là thống kê về số lượng tồn kho.",
-                        "Dữ liệu là những con số thể hiện số lượng tồn kho; Thông tin là tổng kết hoạt động kinh doanh của công ty A."
-                    ],
-                    "answer": "Dữ liệu là những con số thể hiện số lượng sản phẩm bán ra, số lượng tồn kho và doanh thu sau bán hàng; Thông tin là chiến lược quảng cáo cho các tháng tiếp theo."
-                },
-                {
-                    "question": "Tốc độ tính toán của máy tính có thể được đo bằng đơn vị nào sau đây?",
-                    "options": ["GB (Gigabyte)", "GHz (Gigahertz)", "Flops (Floating-point operations per second)", "KB (Kilobyte)"],
-                    "answer": "Flops (Floating-point operations per second)"
-                },
-                {
-                    "question": "Phương án nào sau đây nêu đúng khái niệm về E-Government?",
-                    "options": [
-                        "Là một hệ thống quản lý thông tin trong ngành giáo dục.",
-                        "Là hệ thống giao tiếp giữa các tổ chức chính phủ và công dân qua Internet.",
-                        "Là hệ thống quản lý mạng máy tính của các tổ chức kinh doanh.",
-                        "Là chương trình máy tính phục vụ cho việc tính toán."
-                    ],
-                    "answer": "Là hệ thống giao tiếp giữa các tổ chức chính phủ và công dân qua Internet."
-                },
-                {
-                    "question": "Phát biểu nào dưới đây đúng khi nói về Cách mạng công nghiệp lần thứ tư?",
-                    "options": [
-                        "Cách mạng công nghiệp lần thứ tư chủ yếu dựa vào việc phát triển các phương tiện vận chuyển như tàu hỏa và máy bay.",
-                        "Cách mạng công nghiệp lần thứ tư là sự kết hợp của các công nghệ mới như trí tuệ nhân tạo, Internet vạn vật và dữ liệu lớn.",
-                        "Cách mạng công nghiệp lần thứ tư không có ảnh hưởng đáng kể đến đời sống xã hội.",
-                        "Cách mạng công nghiệp lần thứ tư chỉ ảnh hưởng đến các ngành công nghiệp nặng, không tác động đến các lĩnh vực khác."
-                    ],
-                    "answer": "Cách mạng công nghiệp lần thứ tư là sự kết hợp của các công nghệ mới như trí tuệ nhân tạo, Internet vạn vật và dữ liệu lớn."
-                },
-                {
-                    "question": "Nếu bạn muốn cung cấp các tiện ích thông minh cho ngôi nhà của mình, bạn cần phải sử dụng các thiết bị thông minh nào sau đây?",
-                    "options": [
-                        "Các thiết bị điện tử cơ bản như đèn và quạt, không cần kết nối mạng.",
-                        "Các thiết bị thông minh như đèn, cửa, máy lạnh có khả năng kết nối với nhau và điều khiển qua ứng dụng di động hoặc mạng Internet.",
-                        "Các thiết bị điện tử theo dõi thời gian như lịch vạn niên.",
-                        "Các thiết bị giúp dọn dẹp nhà cửa như máy hút bụi cầm tay mini."
-                    ],
-                    "answer": "Các thiết bị thông minh như đèn, cửa, máy lạnh có khả năng kết nối với nhau và điều khiển qua ứng dụng di động hoặc mạng Internet."
-                },
-                {
-                    "question": "Phương án nào dưới đây là một ứng dụng thực tế của thiết bị thông minh trong đời sống hàng ngày?",
-                    "options": [
-                        "Máy tính để bàn dùng để tính toán số liệu trong các cơ sở sản xuất.",
-                        "Máy giặt tự động điều chỉnh chương trình giặt dựa trên loại vải và mức độ bẩn.",
-                        "Phần mềm kế toán cho phép quản lý dữ liệu tài chính trong công ty.",
-                        "Máy ảnh kỹ thuật số dùng để chụp hình trong các sự kiện."
-                    ],
-                    "answer": "Máy giặt tự động điều chỉnh chương trình giặt dựa trên loại vải và mức độ bẩn."
-                },
-                {
-                    "question": "Thao tác nào sau đây <b>không phải</b> là thao tác sử dụng máy tính đúng cách?",
-                    "options": [
-                        "Tắt máy bằng cách nhấn và giữ nút nguồn.",
-                        "Tổ chức, sắp xếp biểu tượng trên màn hình nền gọn gàng.",
-                        "Sử dụng lệnh Shutdown để tắt máy.",
-                        "Hạn chế mở nhiều ứng dụng cùng lúc để tránh máy bị chậm."
-                    ],
-                    "answer": "Tắt máy bằng cách nhấn và giữ nút nguồn."
-                },
-                {
-                    "question": "Phương án nào sau đây điền từ đúng vào chỗ trống? <br>“... là nơi cho phép truy cập nhanh các ứng dụng đang dùng, thư mục hoặc các tiện ích hệ thống.”",
-                    "options": ["Desktop", "File Explorer", "Taskbar", "Control Panel"],
-                    "answer": "Taskbar"
-                },
-                {
-                    "question": "Phương án nào sau đây giải thích đúng cách sử dụng chế độ tiết kiệm pin trên điện thoại thông minh?",
-                    "options": [
-                        "Bật chế độ tiết kiệm pin sẽ giúp điện thoại ngừng hoạt động, không còn khả năng nhận cuộc gọi hoặc tin nhắn.",
-                        "Chế độ tiết kiệm pin chỉ cần được bật khi pin còn dưới 10%.",
-                        "Bật chế độ tiết kiệm pin giúp giảm độ sáng màn hình, tắt các tính năng không cần thiết và kéo dài thời gian sử dụng pin.",
-                        "Chế độ tiết kiệm pin chỉ có tác dụng khi không sử dụng điện thoại, không có tác dụng khi sử dụng các ứng dụng."
-                    ],
-                    "answer": "Bật chế độ tiết kiệm pin giúp giảm độ sáng màn hình, tắt các tính năng không cần thiết và kéo dài thời gian sử dụng pin."
-                },
-                {
-                    "question": "Màn hình máy tính cá nhân của em để rất nhiều biểu tượng rối mắt. Thao tác nào sau đây giúp em cải thiện điều này?",
-                    "options": [
-                        "Xóa hết tất cả biểu tượng trên màn hình để giảm bớt sự lộn xộn và giúp màn hình trông sạch sẽ hơn.",
-                        "Tạo thêm nhiều lối tắt để dễ tìm các ứng dụng hơn, giúp truy cập nhanh chóng mà không cần tìm kiếm thủ công.",
-                        "Sắp xếp lại các biểu tượng cho gọn gàng và dễ nhận biết, giúp dễ dàng tìm kiếm và truy cập các ứng dụng cần thiết.",
-                        "Tăng độ sáng màn hình để dễ nhìn hơn, giúp cải thiện khả năng quan sát nhưng không giải quyết vấn đề về sự lộn xộn."
-                    ],
-                    "answer": "Sắp xếp lại các biểu tượng cho gọn gàng và dễ nhận biết, giúp dễ dàng tìm kiếm và truy cập các ứng dụng cần thiết."
-                },
-                {
-                    "question": "Phương án nào sau đây nêu đúng sự khác biệt cơ bản giữa mạng LAN và Internet?",
-                    "options": [
-                        "Mạng LAN là mạng diện rộng, còn Internet là mạng nội bộ.",
-                        "Mạng LAN kết nối các thiết bị trong một phạm vi địa lý nhỏ, còn Internet kết nối toàn cầu.",
-                        "Mạng LAN và Internet không có sự khác biệt về phương thức kết nối.",
-                        "Mạng LAN sử dụng mạng không dây, còn Internet chỉ sử dụng kết nối có dây."
-                    ],
-                    "answer": "Mạng LAN kết nối các thiết bị trong một phạm vi địa lý nhỏ, còn Internet kết nối toàn cầu."
-                },
-                {
-                    "question": "Phương án nào dưới đây giải thích đúng tại sao các thiết bị thông minh muốn thu thập dữ liệu tự động cần được gắn các cảm biến và cài đặt phần mềm chuyên dụng?",
-                    "options": [
-                        "Các cảm biến giúp thiết bị thông minh tự động thu thập dữ liệu từ môi trường xung quanh và phần mềm chuyên dụng giúp xử lý và truyền tải dữ liệu đó qua mạng Internet.",
-                        "Các cảm biến giúp thiết bị thông minh kết nối với các thiết bị khác trong mạng LAN.",
-                        "Phần mềm chuyên dụng giúp thiết bị thông minh tự động điều khiển các cảm biến mà không cần kết nối Internet.",
-                        "Cảm biến giúp thiết bị thông minh nhận diện người dùng và phần mềm chuyên dụng giúp mở khóa các thiết bị điện tử."
-                    ],
-                    "answer": "Các cảm biến giúp thiết bị thông minh tự động thu thập dữ liệu từ môi trường xung quanh và phần mềm chuyên dụng giúp xử lý và truyền tải dữ liệu đó qua mạng Internet."
-                },
-                {
-                    "question": "Phương án nào dưới đây mô tả đúng ứng dụng của Internet vạn vật (IoT) trong giao thông thông minh?",
-                    "options": [
-                        "IoT giúp các phương tiện giao thông tự động điều chỉnh tốc độ và dừng lại khi gặp chướng ngại vật.",
-                        "IoT giúp kết nối các phương tiện giao thông với nhau và điều khiển giao thông một cách tự động, thu thập dữ liệu từ các cảm biến môi trường.",
-                        "IoT chỉ giúp giám sát trạng thái của các phương tiện giao thông nhưng không ảnh hưởng đến việc điều khiển giao thông.",
-                        "IoT chỉ sử dụng các cảm biến nhiệt độ và độ ẩm để kiểm tra các tuyến đường giao thông."
-                    ],
-                    "answer": "IoT giúp kết nối các phương tiện giao thông với nhau và điều khiển giao thông một cách tự động, thu thập dữ liệu từ các cảm biến môi trường."
-                },
-                {
-                    "question": "Bạn cần một dịch vụ điện toán đám mây để tổ chức các cuộc họp trực tuyến và chia sẻ tài liệu trong quá trình họp. Dịch vụ nào dưới đây phù hợp nhất với yêu cầu này?",
-                    "options": ["Microsoft Office 365", "Google Drive", "Google Meet", "Dropbox"],
-                    "answer": "Google Meet"
-                },
-                {
-                    "question": "Phương án nào sau đây <b>không phải</b> là một ứng dụng của công nghệ thông tin trong đời sống hàng ngày?",
-                    "options": [
-                        "E-Banking (ngân hàng điện tử).",
-                        "E-Learning (học trực tuyến).",
-                        "Dịch vụ chia sẻ video qua mạng xã hội.",
-                        "Phân tích dữ liệu khoa học trong các phòng thí nghiệm."
-                    ],
-                    "answer": "Phân tích dữ liệu khoa học trong các phòng thí nghiệm."
-                },
-                {
-                    "question": "Cách mạng công nghiệp lần thứ tư có tác động nào sau đây đến nền kinh tế?",
-                    "options": [
-                        "Nó chủ yếu giúp tăng trưởng nền kinh tế dựa trên các ngành công nghiệp sản xuất truyền thống.",
-                        "Nó tạo ra các ngành nghề mới dựa trên công nghệ số, trí tuệ nhân tạo và các công nghệ tiên tiến khác.",
-                        "Nó không ảnh hưởng đến nền kinh tế mà chỉ thay đổi cách thức sản xuất trong các ngành công nghiệp.",
-                        "Nó làm giảm nặng nề nhu cầu về lao động và tăng thất nghiệp trong xã hội."
-                    ],
-                    "answer": "Nó tạo ra các ngành nghề mới dựa trên công nghệ số, trí tuệ nhân tạo và các công nghệ tiên tiến khác."
-                },
-                {
-                    "question": "Phương án nào sắp xếp các bước sau đây là đúng để tắt một ứng dụng bị treo? <br>1. Chọn Task Manager <br>2. Chọn ứng dụng bị treo <br>3. Nhấn tổ hợp phím Ctrl + Alt + Delete <br>4. Nhấp nút End task",
-                    "options": ["2 – 3 – 1 – 4", "1 – 2 – 3 – 4", "3 – 2 – 1 – 4", "3 – 1 – 2 – 4"],
-                    "answer": "3 – 1 – 2 – 4"
-                },
-                {
-                    "question": "Phương án nào sau đây nêu đúng nhất mục đích của thanh nhiệm vụ (Taskbar) trong hệ điều hành Windows?",
-                    "options": [
-                        "Dùng để truy cập và lưu trữ các tệp tin đang được sử dụng trong máy tính, giúp tổ chức các thư mục hiệu quả.",
-                        "Hiển thị thông tin thời gian, thời tiết và các biểu tượng hệ thống như âm lượng, mạng và thông báo quan trọng.",
-                        "Cho phép nhanh chóng khởi chạy các ứng dụng hay dùng, truy cập nhanh các ứng dụng và theo dõi thông tin tiện ích.",
-                        "Là nơi hiển thị các thông tin về phần cứng, bao gồm bộ vi xử lý, bộ nhớ và dung lượng ổ cứng của máy tính."
-                    ],
-                    "answer": "Cho phép nhanh chóng khởi chạy các ứng dụng hay dùng, truy cập nhanh các ứng dụng và theo dõi thông tin tiện ích."
-                },
-                {
-                    "question": "Phương án nào sau đây điền từ đúng vào chỗ trống khi nói về thao tác sạc pin của điện thoại thông minh?<br>“... là thao tác quan trọng giúp tiết kiệm năng lượng cho điện thoại thông minh và kéo dài tuổi thọ pin.”",
-                    "options": [
-                        "Tắt các ứng dụng không sử dụng, tránh chạy nền các phần mềm không cần thiết.",
-                        "Dùng cạn pin điện thoại mới cắm sạc.",
-                        "Chế độ máy bay giúp tiết kiệm pin khi không sử dụng điện thoại.",
-                        "Tắt màn hình khi điện thoại không hoạt động."
-                    ],
-                    "answer": "Tắt các ứng dụng không sử dụng, tránh chạy nền các phần mềm không cần thiết."
-                },
-                {
-                    "question": "Phương án nào sau đây là đúng nhất về quy trình xử lý thông tin của máy tính?",
-                    "options": [
-                        "Máy tính thu thập dữ liệu và xuất dữ liệu ra cho người dùng.",
-                        "Máy tính nhận dữ liệu, xử lý dữ liệu, lưu trữ lại dữ liệu hoặc truyền thông tin cho người dùng.",
-                        "Máy tính thu thập dữ liệu, xử lý dữ liệu và lưu trữ lại dữ liệu đã xử lý.",
-                        "Máy tính xử lý dữ liệu sau đó truyền thông tin cho người dùng."
-                    ],
-                    "answer": "Máy tính nhận dữ liệu, xử lý dữ liệu, lưu trữ lại dữ liệu hoặc truyền thông tin cho người dùng."
-                }
-            ],
-            "part2_tf": [
-                {
-                    "question": "Nhóm của Minh đang tìm hiểu về các đơn vị lưu trữ dữ liệu trong máy tính. Các bạn trong nhóm biết rằng byte là đơn vị cơ bản dùng để đo dung lượng dữ liệu trong máy tính. Sau khi tham khảo thêm tài liệu và thảo luận, các bạn trong nhóm đã đưa ra một số nhận xét như sau:",
-                    "options": [
-                        { "text": "1 byte tương đương với 8 bit.", "answer": "Đ" },
-                        { "text": "Gigabyte (GB) là một bội của byte (B).", "answer": "Đ" },
-                        { "text": "Yottabyte (YB) là đơn vị lưu trữ dữ liệu lớn nhất, có giá trị bằng 2<sup>80</sup> B.", "answer": "S" },
-                        { "text": "Dung lượng lưu trữ dữ liệu của máy tính hiện nay rất nhỏ, chỉ ở mức Terabyte (TB).", "answer": "S" }
-                    ]
-                },
-                {
-                    "question": "Trung tâm y tế phường tổ chức buổi chia sẻ với học sinh về cách hiểu đúng thông tin từ dữ liệu. Bác sĩ đưa ra ví dụ: “Em hiểu 39°C nghĩa là gì?\". Một bạn học sinh nói đó có thể là dấu hiệu cho thấy một người đang sốt cao, một bạn khác nói đó là nhiệt độ ngoài trời ngày nắng nóng. Một số bạn khác đã đưa ra một số nhận xét sau khi nghe câu trả lời của hai bạn:",
-                    "options": [
-                        { "text": "Con số 39°C là thông tin.", "answer": "S" },
-                        { "text": "Cùng một dữ liệu nhưng đặt trong ngữ cảnh khác nhau có thể dẫn đến thông tin khác nhau.", "answer": "Đ" },
-                        { "text": "Nếu không có đầy đủ dữ liệu đi kèm, thông tin được rút ra có thể sai lệch hoặc không xác định được.", "answer": "Đ" },
-                        { "text": "Trong mọi trường hợp, dữ liệu “39°C” luôn mang nghĩa là sốt cao.", "answer": "S" }
-                    ]
-                },
-                {
-                    "question": "Trong tin học, tốc độ tính toán của máy tính là số phép tính thực hiện được trong một giây, gọi là flops (Floating-point Operations Per Second). Các siêu máy tính có tốc độ tính toán cỡ vài trăm triệu tỉ phép tính trong một giây, ví dụ như siêu máy tính Fugaku của Nhật Bản có tốc độ trên 400 petaflops. Sau khi đọc nhận xét trên, một số học sinh đưa ra các ý kiến sau:",
-                    "options": [
-                        { "text": "Tốc độ tính toán của máy tính là số phép tính thực hiện được trong một giây.", "answer": "Đ" },
-                        { "text": "Siêu máy tính Fugaku có tốc độ tính toán hơn 400 triệu phép tính trong một giây.", "answer": "S" },
-                        { "text": "Máy tính cá nhân có thể đạt tốc độ tính toán tương đương siêu máy tính với phần cứng mạnh mẽ.", "answer": "S" },
-                        { "text": "Máy tính cá nhân ngày nay có tốc độ tính toán của bộ vi xử lí tăng rất nhanh làm cho thiết bị này trở nên ưu việt hơn so với con người trong hoạt động thu nhận, lưu trữ, xuất và truyền tải thông tin.", "answer": "Đ" }
-                    ]
-                },
-                {
-                    "question": "Cuộc cách mạng công nghiệp lần thứ tư đã thay đổi mạnh mẽ các lĩnh vực công nghiệp và xã hội. Các công nghệ mới như Internet vạn vật (IoT), dữ liệu lớn (Big Data), và điện toán đám mây (Cloud Computing) đang phát triển mạnh mẽ và thay đổi cách thức hoạt động của các ngành nghề. Một số học sinh sau khi tìm hiểu về cách mạng công nghiệp 4.0 đã đưa ra các ý kiến sau:",
-                    "options": [
-                        { "text": "Internet vạn vật là kết nối mọi vật thông qua Internet.", "answer": "Đ" },
-                        { "text": "Điện toán đám mây giúp thu hẹp không gian lưu trữ cho các thiết bị số.", "answer": "S" },
-                        { "text": "Dữ liệu lớn được sử dụng để phân tích khối lượng dữ liệu cực lớn, nhanh chóng và chính xác, được dùng để dự đoán các xu hướng trong tương lai.", "answer": "Đ" },
-                        { "text": "Internet vạn vật chủ yếu được áp dụng trong hệ thống nhà thông minh.", "answer": "S" }
-                    ]
-                }
-            ]
-        };
+        // --- XÓA DỮ LIỆU ĐỀ THI CỨNG ---
+        // const quizData = { ... }; // Đã bị xóa
 
         // --- BIẾN TRẠNG THÁI TOÀN CỤC ---
+        let quizData = {}; // Sẽ được tải từ Google Sheet
+        let isDataLoaded = false; // Cờ theo dõi trạng thái tải dữ liệu
+        
         let currentQuestionIndex = 0;
-        let finalQuizQuestions = []; // Mảng chứa các câu hỏi đã xáo trộn
-        let userAnswers = []; // Mảng lưu câu trả lời của học sinh
+        let finalQuizQuestions = []; 
+        let userAnswers = []; 
         let score = 0;
         let timerInterval;
         let timeLeft = QUIZ_TIME_SECONDS;
         let startTime;
         let selectedStudentName = "";
         let selectedClassName = "";
-        let isSubmitted = false; // Ngăn nộp bài nhiều lần
-        let violationCount = 0; // Đếm số lần vi phạm
-        let isQuizActive = false; // Cờ kiểm soát quiz
-        let isWarningModalOpen = false; // Sửa lỗi: Cờ kiểm soát modal
+        let isSubmitted = false; 
+        let violationCount = 0; 
+        let isQuizActive = false; 
+        let isWarningModalOpen = false; 
         
-        // --- LƯU TRỮ CỤC BỘ ---
         const storageKey = 'completedStudents_tin10_gki_2025';
 
-        // Lấy danh sách đã hoàn thành từ localStorage
         function getCompletedStudents() {
             const data = localStorage.getItem(storageKey);
             return data ? JSON.parse(data) : {};
         }
 
-        // Lưu học sinh đã hoàn thành vào localStorage
         function markStudentAsCompleted(className, studentName) {
             const completed = getCompletedStudents();
             if (!completed[className]) {
@@ -705,6 +429,12 @@
         const nameSelect = document.getElementById('name-select');
         const startBtn = document.getElementById('start-btn');
         
+        // Thêm các element cho việc tải dữ liệu
+        const loadingMsg = document.getElementById('loading-msg');
+        const loadingError = document.getElementById('loading-error');
+        const classSelectLabel = document.getElementById('class-select-label');
+        const nameSelectLabel = document.getElementById('name-select-label');
+
         const questionCounter = document.getElementById('question-counter');
         const timerDisplay = document.getElementById('timer');
         const partGuide = document.getElementById('part-guide');
@@ -721,16 +451,62 @@
         const copyFallbackInput = document.getElementById('copy-fallback-input');
         const finishBtn = document.getElementById('finish-btn');
         
-        // DOM Elements cho Modal Cảnh báo
         const warningModal = document.getElementById('warning-modal');
         const warningTitle = document.getElementById('warning-title');
         const warningText = document.getElementById('warning-text');
         const warningSubtext = document.getElementById('warning-subtext');
         const warningOkBtn = document.getElementById('warning-ok-btn');
 
+        // --- LOGIC TẢI DỮ LIỆU ---
+
+        // Hàm này sẽ gọi Google Sheet để lấy dữ liệu đề thi
+        // Yêu cầu: Google Apps Script phải được cài đặt để xử lý_GET_ request với `?action=getQuizData`
+        // và trả về JSON có dạng: { part1_mcq: [...], part2_tf: [...] }
+        async function fetchQuizData() {
+            try {
+                const dataUrl = GOOGLE_SHEET_URL + '?action=getQuizData'; 
+                
+                // Thêm cache-busting_
+                const response = await fetch(dataUrl + '&t=' + new Date().getTime(), {
+                    method: 'GET',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Lỗi mạng: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data && data.part1_mcq && data.part2_tf) {
+                    quizData = data; // Lưu dữ liệu vào biến toàn cục
+                    isDataLoaded = true;
+                    loadingMsg.textContent = 'Vui lòng chọn đúng thông tin của em để bắt đầu.'; // Thay đổi text
+                    
+                    // Kích hoạt lại form
+                    classSelect.disabled = false;
+                    classSelectLabel.classList.remove('opacity-50');
+                    nameSelectLabel.classList.remove('opacity-50');
+                    // Nút start-btn_sẽ được_checkLoginState_ kích hoạt
+
+                } else {
+                    throw new Error('Dữ liệu đề thi trả về không hợp lệ.');
+                }
+
+            } catch (error) {
+                console.error('Không thể tải dữ liệu đề thi:', error);
+                loadingMsg.classList.add('hidden');
+                loadingError.textContent = 'Lỗi! Không thể tải được dữ liệu đề thi. Vui lòng tải lại trang.';
+                loadingError.classList.remove('hidden');
+                // Giữ các_select_ bị vô hiệu hóa
+                classSelect.disabled = true;
+                nameSelect.disabled = true;
+            }
+        }
+
+
         // --- LOGIC KHỞI TẠO (ĐĂNG NHẬP) ---
         
-        // 1. Tải danh sách lớp vào dropdown
         function populateClasses() {
             const classes = Object.keys(studentData);
             classes.forEach(className => {
@@ -741,9 +517,7 @@
             });
         }
 
-        // 2. Tải danh sách học sinh dựa theo lớp
         function populateNames(className) {
-            // Xóa các tên cũ
             nameSelect.innerHTML = '<option value="">-- Vui lòng chọn tên --</option>';
             nameSelect.disabled = true;
             
@@ -753,7 +527,6 @@
                 
                 const students = studentData[className];
                 students.forEach(studentName => {
-                    // Chỉ thêm học sinh CHƯA hoàn thành bài
                     if (!completedInThisClass.includes(studentName)) {
                         const option = document.createElement('option');
                         option.value = studentName;
@@ -763,7 +536,7 @@
                 });
                 nameSelect.disabled = false;
             }
-            checkLoginState(); // Kiểm tra lại nút bắt đầu
+            checkLoginState(); 
         }
 
         // 3. Kiểm tra để kích hoạt nút "Bắt đầu"
@@ -771,7 +544,8 @@
             selectedClassName = classSelect.value;
             selectedStudentName = nameSelect.value;
             
-            if (selectedClassName && selectedStudentName) {
+            // Thêm điều kiện: chỉ kích hoạt_startBtn_ nếu dữ liệu đã được_load_
+            if (selectedClassName && selectedStudentName && isDataLoaded) {
                 startBtn.disabled = false;
             } else {
                 startBtn.disabled = true;
@@ -780,126 +554,98 @@
 
         // --- LOGIC BÀI KIỂM TRA ---
 
-        // 1. Bắt đầu bài kiểm tra
         function startQuiz() {
-            // Lưu lại tên và lớp
             selectedClassName = classSelect.value;
             selectedStudentName = nameSelect.value;
-
-            // Đánh dấu học sinh đã làm bài (ngay khi bắt đầu)
             markStudentAsCompleted(selectedClassName, selectedStudentName);
 
-            // Chuẩn bị câu hỏi
+            // Chuẩn bị câu hỏi (từ quizData đã_load)
             finalQuizQuestions = prepareQuestions();
             userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
             currentQuestionIndex = 0;
             score = 0;
             isSubmitted = false;
-            violationCount = 0; // Reset số lần vi phạm
-            isQuizActive = true; // Kích hoạt bài thi
+            violationCount = 0; 
+            isQuizActive = true; 
             isWarningModalOpen = false;
             
-            // Chuyển màn hình
             loginScreen.classList.add('fade-out');
             setTimeout(() => {
                 loginScreen.classList.add('hidden');
                 quizScreen.classList.remove('hidden');
                 quizScreen.classList.add('fade-in');
                 
-                // Hiển thị câu hỏi đầu tiên
                 displayQuestion(currentQuestionIndex);
                 
-                // Bắt đầu đếm giờ
                 startTime = new Date();
                 timeLeft = QUIZ_TIME_SECONDS;
                 timerDisplay.textContent = formatTime(timeLeft);
                 timerInterval = setInterval(updateTimer, 1000);
-            }, 150); // 150ms khớp với fade-out
+            }, 150);
         }
 
-        // 2. Chuẩn bị (xáo trộn) câu hỏi
         function prepareQuestions() {
-            // Xáo trộn Phần 1
+            // Xáo trộn Phần 1 (Lấy từ quizData toàn cục)
             const part1 = shuffleArray([...quizData.part1_mcq]);
             
-            // Chỉ xáo trộn NỘI DUNG phương án, giữ nguyên nhãn A, B, C, D
             const shuffledPart1 = part1.map(q => {
-                // Chỉ xáo trộn nội dung trong mảng 'options'
                 let shuffledOptionsContent = shuffleArray([...q.options]);
-                
-                // Trả về câu hỏi mới với nội dung đã xáo trộn
                 return {
                     ...q,
                     type: 'mcq',
-                    // Gán lại nội dung đã xáo trộn vào q.options
                     options: shuffledOptionsContent 
                 };
             });
 
-            // Xáo trộn Phần 2
+            // Xáo trộn Phần 2 (Lấy từ quizData toàn cục)
             const shuffledPart2 = shuffleArray([...quizData.part2_tf]).map(q => ({
                 ...q,
                 type: 'tf'
             }));
 
-            // Gộp 2 phần
             return [...shuffledPart1, ...shuffledPart2];
         }
 
-        // 3. Hiển thị câu hỏi
         function displayQuestion(index) {
-            // Ngăn việc hiển thị câu hỏi nếu bài đã nộp (ví dụ: do vi phạm)
             if (isSubmitted) return;
 
             const q = finalQuizQuestions[index];
             const questionNum = index + 1;
 
-            // Cập nhật số thứ tự
             questionCounter.textContent = `Câu ${questionNum}/${TOTAL_QUESTIONS}`;
 
-            // Tạo nội dung HTML cho câu hỏi
-            let questionHTML = `<p class="font-bold">Câu ${questionNum}:</p>${q.question.replace(/<br>/g, '<br><span class="block mt-2"></span>')}`;
+            let questionHTML = `<p class="font-bold">Câu ${questionNum}:</p>${q.question.replace(/\n/g, '<br>').replace(/<br>/g, '<br><span class="block mt-2"></span>')}`;
             questionText.innerHTML = questionHTML;
 
-            // Xóa các phương án cũ
             optionsContainer.innerHTML = '';
             partGuide.classList.add('hidden');
 
-            // Xử lý Phần 1: Trắc nghiệm nhiều lựa chọn (MCQ)
             if (q.type === 'mcq') {
-                if (index === 0) { // Câu đầu tiên của Phần 1
+                if (index === 0) { 
                     partGuide.innerHTML = `<b>PHẦN 1: TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN</b><br>Từ câu 1 đến câu ${MCQ_PART_COUNT}, mỗi câu học sinh chỉ chọn một phương án trả lời.`;
                     partGuide.classList.remove('hidden');
                 }
                 
                 const labels = ["A.", "B.", "C.", "D."];
-                // Dùng q.options (đã xáo trộn) và nhãn cố định
                 q.options.forEach((optionText, optionIndex) => {
                     const optionButton = document.createElement('button');
                     optionButton.className = 'option-btn';
-                    // Gắn nhãn cố định (A, B, C, D) với nội dung đã xáo trộn
                     optionButton.innerHTML = `<span class="font-semibold mr-2">${labels[optionIndex]}</span> ${optionText}`;
-                    
-                    // Thêm sự kiện click
                     optionButton.onclick = () => selectOptionMCQ(optionButton, optionText);
                     
-                    // Kiểm tra nếu câu này đã được trả lời
                     if (userAnswers[index] === optionText) {
                         optionButton.classList.add('selected');
                     }
-                    
                     optionsContainer.appendChild(optionButton);
                 });
                 
             } 
-            // Xử lý Phần 2: Trắc nghiệm Đúng/Sai (TF)
             else if (q.type === 'tf') {
-                if (index === MCQ_PART_COUNT) { // Câu đầu tiên của Phần 2
+                if (index === MCQ_PART_COUNT) { 
                     partGuide.innerHTML = `<b>PHẦN 2: TRẮC NGHIỆM ĐÚNG SAI</b><br>Từ câu ${MCQ_PART_COUNT + 1} đến câu ${TOTAL_QUESTIONS}, mỗi câu có 4 phương án, học sinh chọn Đúng hoặc Sai cho từng phương án.`;
                     partGuide.classList.remove('hidden');
                 }
 
-                // Khởi tạo mảng trả lời cho câu TF nếu chưa có
                 if (!userAnswers[index]) {
                     userAnswers[index] = [null, null, null, null];
                 }
@@ -925,7 +671,6 @@
                     falseBtn.textContent = 'Sai';
                     falseBtn.onclick = () => selectOptionTF(index, optIndex, 'S', falseBtn);
                     
-                    // Kiểm tra nếu đã trả lời
                     const currentAnswer = userAnswers[index][optIndex];
                     if (currentAnswer === 'Đ') {
                         trueBtn.classList.add('selected');
@@ -940,17 +685,12 @@
                 });
             }
 
-            // Yêu cầu MathJax quét và hiển thị công thức
-            // Việc này phải được gọi sau khi `innerHTML` đã được cập nhật
             if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
-                // Chỉ quét các phần tử vừa được cập nhật
                 MathJax.typesetPromise([questionText, optionsContainer]).catch((err) => console.log('Lỗi MathJax:', err));
             }
 
-            // Vô hiệu hóa nút "Tiếp theo"
             nextBtn.disabled = userAnswers[index] === null || (q.type === 'tf' && userAnswers[index].includes(null));
 
-            // Thay đổi nút ở câu cuối
             if (index === TOTAL_QUESTIONS - 1) {
                 nextBtn.textContent = 'Nộp bài và xem kết quả';
             } else {
@@ -958,39 +698,22 @@
             }
         }
 
-        // 4. Xử lý chọn đáp án MCQ
         function selectOptionMCQ(selectedButton, answerText) {
-            // Xóa class 'selected' khỏi tất cả các nút
             const buttons = optionsContainer.querySelectorAll('.option-btn');
             buttons.forEach(btn => btn.classList.remove('selected'));
-            
-            // Thêm class 'selected' cho nút được chọn
             selectedButton.classList.add('selected');
-            
-            // Lưu câu trả lời
             userAnswers[currentQuestionIndex] = answerText;
-            
-            // Kích hoạt nút "Tiếp theo"
             nextBtn.disabled = false;
         }
 
-        // 5. Xử lý chọn đáp án TF
         function selectOptionTF(qIndex, optIndex, answer, selectedButton) {
-            // Xóa class 'selected' khỏi cả 2 nút Đúng/Sai trong nhóm
             const parent = selectedButton.parentElement;
             parent.querySelectorAll('.tf-btn').forEach(btn => btn.classList.remove('selected'));
-            
-            // Thêm class 'selected' cho nút được chọn
             selectedButton.classList.add('selected');
-            
-            // Lưu câu trả lời
             userAnswers[qIndex][optIndex] = answer;
-            
-            // Kích hoạt nút "Tiếp theo" nếu đã trả lời đủ 4 ý
             checkSelectionsTF();
         }
 
-        // 6. Kiểm tra xem đã trả lời đủ 4 ý của câu TF chưa
         function checkSelectionsTF() {
             const currentAnswers = userAnswers[currentQuestionIndex];
             if (currentAnswers && !currentAnswers.includes(null)) {
@@ -1000,70 +723,53 @@
             }
         }
         
-        // 7. Xử lý khi nhấn nút "Tiếp theo" / "Nộp bài"
         function handleNextQuestion() {
-            // Nếu là câu cuối cùng -> Nộp bài
             if (currentQuestionIndex === TOTAL_QUESTIONS - 1) {
                 submitQuiz();
             } else {
-                // Chuyển câu hỏi
                 currentQuestionIndex++;
                 quizScreen.classList.add('fade-out');
                 
                 setTimeout(() => {
                     displayQuestion(currentQuestionIndex);
                     quizScreen.classList.remove('fade-out');
-                    // Không cần fade-in vì nó không ẩn đi
-                }, 150); // 150ms khớp với fade-out
+                }, 150); 
             }
         }
         
-        // 8. Cập nhật đồng hồ
         function updateTimer() {
-            // Chỉ chạy nếu modal không mở
             if (isWarningModalOpen) return; 
 
             if (timeLeft > 0) {
                 timeLeft--;
                 timerDisplay.textContent = formatTime(timeLeft);
             } else {
-                if (!isSubmitted) { // Chỉ nộp 1 lần
-                    submitQuiz(); // Tự động nộp bài khi hết giờ
+                if (!isSubmitted) { 
+                    submitQuiz(); 
                 }
             }
         }
 
         // --- LOGIC KẾT QUẢ ---
         
-        // 1. Nộp bài (tự động hoặc thủ công)
         function submitQuiz() {
-            // Ngăn chặn nộp bài nhiều lần
             if (isSubmitted) return;
             isSubmitted = true;
-            isQuizActive = false; // Ngừng theo dõi vi phạm
+            isQuizActive = false; 
             
-            // Dừng đồng hồ
             clearInterval(timerInterval);
-            
-            // Đảm bảo modal cảnh báo đã tắt
             hideWarningModal();
-            
-            // Tính toán điểm số
             calculateScore();
-            
-            // Hiển thị kết quả
             displayResults();
             
-            // Chuyển màn hình
             quizScreen.classList.add('fade-out');
             setTimeout(() => {
                 quizScreen.classList.add('hidden');
                 resultScreen.classList.remove('hidden');
                 resultScreen.classList.add('fade-in');
-            }, 150); // 150ms khớp với fade-out
+            }, 150); 
         }
 
-        // 2. Tính điểm
         function calculateScore() {
             score = 0;
             finalQuizQuestions.forEach((q, index) => {
@@ -1075,7 +781,7 @@
                     }
                 } else if (q.type === 'tf') {
                     let correctCount = 0;
-                    if(userAnswer) { // Đảm bảo userAnswer không null (ví dụ: bị nộp do hết giờ)
+                    if(userAnswer) { 
                         q.options.forEach((opt, optIndex) => {
                             if (userAnswer[optIndex] === opt.answer) {
                                 correctCount++;
@@ -1083,66 +789,50 @@
                         });
                     }
                     
-                    // Tính điểm lũy tiến
-                    if (correctCount === 1) {
-                        score += 0.1;
-                    } else if (correctCount === 2) {
-                        score += 0.25;
-                    } else if (correctCount === 3) {
-                        score += 0.5;
-                    } else if (correctCount === 4) {
-                        score += 1.0;
-                    }
+                    if (correctCount === 1) score += 0.1;
+                    else if (correctCount === 2) score += 0.25;
+                    else if (correctCount === 3) score += 0.5;
+                    else if (correctCount === 4) score += 1.0;
                 }
             });
-            // Làm tròn điểm số
             score = Math.round(score * 100) / 100;
         }
 
-        // 3. Hiển thị màn hình kết quả (Đã rút gọn)
         function displayResults() {
             const timeTaken = QUIZ_TIME_SECONDS - timeLeft;
             const formattedTime = formatTime(timeTaken);
 
-            // Vùng 1: Thông báo
             resultUserName.textContent = `Đây là kết quả bài làm của bạn, ${selectedStudentName}.`;
             finalScoreDisplay.textContent = `${score} / 10`;
             finalTimeDisplay.textContent = `Thời gian làm bài: ${formattedTime}`;
         }
         
-        // 4. Sao chép kết quả
         function copyResults() {
             const timeTaken = QUIZ_TIME_SECONDS - timeLeft;
             const formattedTime = formatTime(timeTaken);
-            
-            // [Họ tên] | [Tên lớp] | [Thời gian làm bài] | [Điểm]
             const copyText = `${selectedStudentName} | ${selectedClassName} | ${formattedTime} | ${score}`;
 
             copyFallbackWrapper.classList.add('hidden');
             copySuccessMsg.textContent = '';
             
-            // Thử API Clipboard hiện đại
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(copyText)
                     .then(() => {
                         copySuccessMsg.textContent = 'Đã sao chép thành công!';
                     })
                     .catch(err => {
-                        // Thất bại -> thử execCommand
                         tryExecCommand(copyText);
                     });
             } else {
-                // Thử execCommand cho trình duyệt cũ
                 tryExecCommand(copyText);
             }
         }
         
-        // Phương thức sao chép cũ (execCommand)
         function tryExecCommand(text) {
              try {
                 const textArea = document.createElement("textarea");
                 textArea.value = text;
-                textArea.style.position = "fixed"; // Đảm bảo không nhìn thấy
+                textArea.style.position = "fixed"; 
                 textArea.style.top = "-9999px";
                 textArea.style.left = "-9999px";
                 document.body.appendChild(textArea);
@@ -1154,16 +844,13 @@
                 if (successful) {
                     copySuccessMsg.textContent = 'Đã sao chép thành công!';
                 } else {
-                    // Thất bại -> hiển thị fallback
                     showCopyFallback(text);
                 }
             } catch (err) {
-                // Thất bại -> hiển thị fallback
                 showCopyFallback(text);
             }
         }
         
-        // Hiển thị ô input để sao chép thủ công
         function showCopyFallback(text) {
             copySuccessMsg.textContent = '';
             copyFallbackInput.value = text;
@@ -1172,8 +859,6 @@
             copyFallbackInput.select();
         }
 
-
-        // 5. Kết thúc và gửi dữ liệu
         function finishQuiz() {
             finishBtn.disabled = true;
             finishBtn.textContent = 'Đang nộp bài...';
@@ -1182,7 +867,6 @@
             const formattedTime = formatTime(timeTaken);
             const timestamp = new Date().toLocaleString("vi-VN");
 
-            // Gửi dữ liệu bằng URL Parameters
             const url = new URL(GOOGLE_SHEET_URL);
             url.searchParams.append('timestamp', timestamp);
             url.searchParams.append('studentName', selectedStudentName);
@@ -1190,27 +874,22 @@
             url.searchParams.append('score', score);
             url.searchParams.append('time', formattedTime);
             
-            // Gửi dữ liệu đến Google Sheet
             fetch(url.toString(), {
                 method: 'POST',
-                mode: 'no-cors', // 'no-cors' vì Apps Script Web App thường không trả về CORS header
+                mode: 'no-cors', 
                 cache: 'no-cache',
             })
             .then(response => {
-                // Dù thành công hay thất bại, cũng reset
                 console.log('Gửi kết quả thành công (hoặc đã cố gắng gửi).');
                 resetApp();
             })
             .catch(error => {
                 console.error('Lỗi khi gửi kết quả:', error);
-                // Vẫn reset dù có lỗi
                 resetApp();
             });
         }
         
-        // 6. Reset ứng dụng về màn hình đăng nhập
         function resetApp() {
-             // Chờ 1 giây để học sinh thấy "Đang nộp bài..."
             setTimeout(() => {
                 resultScreen.classList.add('fade-out');
                 
@@ -1221,60 +900,51 @@
                     
                     // Reset các giá trị
                     classSelect.value = '';
-                    populateNames(''); // Tải lại danh sách tên (đã lọc)
+                    populateNames(''); 
+                    
+                    // Reset thông báo_loading
+                    loadingMsg.textContent = 'Vui lòng chọn đúng thông tin của em để bắt đầu.';
+                    loadingMsg.classList.remove('hidden');
+                    loadingError.classList.add('hidden');
+                    
+                    // Trạng thái_checkLoginState_ sẽ tự_handle_ nút_startBtn
                     checkLoginState();
                     
-                    // Reset các nút
                     finishBtn.disabled = false;
                     finishBtn.textContent = 'Kết thúc';
                     copySuccessMsg.textContent = '';
                     copyFallbackWrapper.classList.add('hidden');
                 }, 150);
-            }, 1000); // 1 giây
+            }, 1000); 
         }
-
 
         // --- LOGIC THEO DÕI VI PHẠM (CHUYỂN TAB) ---
         
-        // SỬA LỖI: Logic mới để đếm chính xác
         function handleVisibilityChange() {
-            // Chỉ kiểm tra nếu bài thi đang diễn ra VÀ học sinh rời màn hình
             if (isQuizActive && document.visibilityState === 'hidden') {
-                // Tạm dừng đồng hồ ngay lập tức
                 if (timerInterval) clearInterval(timerInterval);
                 
-                // Chỉ tăng và hiển thị modal nếu chưa bị nộp bài
                 if (!isSubmitted) {
                     violationCount++;
-                    
-                    // Hiển thị modal (bất kể đang hiển thị hay không, để cập nhật text)
                     showWarningModal();
                 }
             } 
-            // Khi học sinh quay lại
-            else if (isQuizActive && document.visibilityState === 'visible') {
-                // Không làm gì cả, chờ học sinh nhấn OK trên modal
-            }
         }
         
         function showWarningModal() {
-            // Tạm dừng đồng hồ (đã dừng ở trên)
             isWarningModalOpen = true;
 
             if (violationCount >= MAX_VIOLATIONS) {
-                // Vi phạm lần cuối
                 warningTitle.textContent = 'Đã hết số lần cảnh báo!';
                 warningText.innerHTML = `Bạn đã rời khỏi màn hình <b>lần thứ ${violationCount}/${MAX_VIOLATIONS}</b>.`;
                 warningSubtext.innerHTML = 'Bài kiểm tra của bạn đã kết thúc, bạn không được tiếp tục làm bài kiểm tra nữa.';
-                warningOkBtn.textContent = 'Xem kết quả'; // Đổi nút
+                warningOkBtn.textContent = 'Xem kết quả';
             } else {
-                // Cảnh báo
                 warningTitle.textContent = 'Cảnh báo!';
                 warningText.innerHTML = `Bạn vừa rời khỏi màn hình làm bài. Đây là vi phạm <b>lần thứ ${violationCount}/${MAX_VIOLATIONS}</b>.`;
                 warningSubtext.innerHTML = `Nếu vi phạm ${MAX_VIOLATIONS} lần, bài thi của bạn sẽ tự động bị nộp!`;
                 warningOkBtn.textContent = 'Tôi đã hiểu';
             }
-            
             warningModal.classList.add('visible');
         }
 
@@ -1282,14 +952,11 @@
             isWarningModalOpen = false;
             warningModal.classList.remove('visible');
             
-            // Kiểm tra xem có phải là lần vi phạm cuối cùng không
             if (violationCount >= MAX_VIOLATIONS) {
-                // Nộp bài ngay lập tức
                 if (!isSubmitted) {
                     submitQuiz();
                 }
             } else {
-                // Tiếp tục đồng hồ (nếu bài thi chưa bị nộp)
                 if (isQuizActive && !isSubmitted) {
                     timerInterval = setInterval(updateTimer, 1000);
                 }
@@ -1298,7 +965,6 @@
         
         // --- HÀM TIỆN ÍCH ---
 
-        // Xáo trộn mảng (Fisher-Yates shuffle)
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -1307,7 +973,6 @@
             return array;
         }
 
-        // Định dạng thời gian (MM:SS)
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const remainingSeconds = seconds % 60;
@@ -1316,7 +981,14 @@
         
         // --- KHỞI CHẠY ỨNG DỤNG ---
         
-        function init() {
+        async function init() {
+            // Vô hiệu hóa form_login_ khi đang tải
+            classSelect.disabled = true;
+            nameSelect.disabled = true;
+            startBtn.disabled = true;
+            classSelectLabel.classList.add('opacity-50');
+            nameSelectLabel.classList.add('opacity-50');
+
             // Đăng ký sự kiện
             classSelect.addEventListener('change', (e) => populateNames(e.target.value));
             nameSelect.addEventListener('change', checkLoginState);
@@ -1325,18 +997,19 @@
             copyBtn.addEventListener('click', copyResults);
             finishBtn.addEventListener('click', finishQuiz);
             
-            // Đăng ký sự kiện cho Modal và theo dõi chuyển tab
             warningOkBtn.addEventListener('click', hideWarningModal);
             document.addEventListener('visibilitychange', handleVisibilityChange);
             
             // Tải danh sách lớp ban đầu
             populateClasses();
+            
+            // Bắt đầu tải dữ liệu đề thi
+            // Sử dụng_await_ để đảm bảo dữ liệu được_tải_ xong_trước_ khi người_dùng_ có thể bắt đầu
+            await fetchQuizData(); 
         }
 
-        // Chạy hàm init khi trang tải xong
         document.addEventListener('DOMContentLoaded', init);
 
     </script>
 </body>
 </html>
-
